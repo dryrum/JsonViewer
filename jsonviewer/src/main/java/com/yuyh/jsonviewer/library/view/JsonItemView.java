@@ -26,6 +26,8 @@ public class JsonItemView extends LinearLayout {
     private TextView mTvLeft, mTvRight;
     private ImageView mIvIcon;
 
+    private Boolean isFocusable = false;
+
     public JsonItemView(Context context) {
         this(context, null);
     }
@@ -40,6 +42,10 @@ public class JsonItemView extends LinearLayout {
         mContext = context;
 
         initView();
+    }
+
+    public void setFocusableTv(Boolean focusable){
+        isFocusable = focusable;
     }
 
     private void initView() {
@@ -111,7 +117,12 @@ public class JsonItemView extends LinearLayout {
 
     public void showIcon(boolean isPlus) {
         mIvIcon.setVisibility(VISIBLE);
-        mIvIcon.setImageResource(isPlus ? R.drawable.jsonviewer_plus : R.drawable.jsonviewer_minus);
+        if(isFocusable){
+            mIvIcon.setImageResource(isPlus ? R.drawable.plus_selector : R.drawable.minus_selector);
+            mIvIcon.setFocusable(isFocusable);
+        }else{
+            mIvIcon.setImageResource(isPlus ? R.drawable.jsonviewer_plus : R.drawable.jsonviewer_minus);
+        }
         mIvIcon.setContentDescription(getResources().getString(isPlus ? R.string.jsonViewer_icon_plus : R.string.jsonViewer_icon_minus));
     }
 
