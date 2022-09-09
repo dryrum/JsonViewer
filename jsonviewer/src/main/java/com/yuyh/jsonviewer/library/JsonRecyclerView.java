@@ -1,6 +1,7 @@
 package com.yuyh.jsonviewer.library;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +21,8 @@ import org.json.JSONObject;
  */
 public class JsonRecyclerView extends RecyclerView {
 
+    private Boolean isFocusable = false;
+
     private BaseJsonViewerAdapter mAdapter;
 
     public JsonRecyclerView(Context context) {
@@ -28,12 +31,25 @@ public class JsonRecyclerView extends RecyclerView {
 
     public JsonRecyclerView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
+        initCustomParams(attrs);
     }
 
     public JsonRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
+        initCustomParams(attrs);
         initView();
+    }
+
+    private void initCustomParams(@Nullable AttributeSet attrs){
+        TypedArray a = getContext().getTheme().obtainStyledAttributes(
+                attrs,
+                R.styleable.JsonRecyclerView,
+                0, 0);
+        try {
+            isFocusable = a.getBoolean(R.styleable.JsonRecyclerView_focusableForTv, false);
+        } finally {
+            a.recycle();
+        }
     }
 
     private void initView() {
@@ -42,19 +58,19 @@ public class JsonRecyclerView extends RecyclerView {
 
     public void bindJson(String jsonStr) {
         mAdapter = null;
-        mAdapter = new JsonViewerAdapter(jsonStr);
+        mAdapter = new JsonViewerAdapter(jsonStr, isFocusable);
         setAdapter(mAdapter);
     }
 
     public void bindJson(JSONArray array) {
         mAdapter = null;
-        mAdapter = new JsonViewerAdapter(array);
+        mAdapter = new JsonViewerAdapter(array, isFocusable);
         setAdapter(mAdapter);
     }
 
     public void bindJson(JSONObject object) {
         mAdapter = null;
-        mAdapter = new JsonViewerAdapter(object);
+        mAdapter = new JsonViewerAdapter(object, isFocusable);
         setAdapter(mAdapter);
     }
 
