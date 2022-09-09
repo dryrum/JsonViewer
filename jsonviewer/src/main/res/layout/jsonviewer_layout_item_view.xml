@@ -24,9 +24,8 @@
         android:contentDescription="@string/jsonViewer_icon_plus"
         android:padding="2dp"
         android:scaleType="fitCenter"
-        android:src="@drawable/jsonviewer_plus"
+        android:src="@drawable/plus_selector"
         android:visibility="gone"
-        app:tint="#999999"
         tools:visibility="visible" />
 
     <TextView

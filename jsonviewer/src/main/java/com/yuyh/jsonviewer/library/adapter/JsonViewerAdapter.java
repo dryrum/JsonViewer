@@ -21,12 +21,14 @@ import org.json.JSONTokener;
 public class JsonViewerAdapter extends BaseJsonViewerAdapter<JsonViewerAdapter.JsonItemViewHolder> {
 
     private String jsonStr;
+    private Boolean isFocusableTv;
 
     private JSONObject mJSONObject;
     private JSONArray mJSONArray;
 
-    public JsonViewerAdapter(String jsonStr) {
+    public JsonViewerAdapter(String jsonStr, Boolean isFocusableTv) {
         this.jsonStr = jsonStr;
+        this.isFocusableTv = isFocusableTv;
 
         Object object = null;
         try {
@@ -43,15 +45,17 @@ public class JsonViewerAdapter extends BaseJsonViewerAdapter<JsonViewerAdapter.J
         }
     }
 
-    public JsonViewerAdapter(JSONObject jsonObject) {
+    public JsonViewerAdapter(JSONObject jsonObject, Boolean isFocusableTv) {
         this.mJSONObject = jsonObject;
+        this.isFocusableTv = isFocusableTv;
         if (mJSONObject == null) {
             throw new IllegalArgumentException("jsonObject can not be null.");
         }
     }
 
-    public JsonViewerAdapter(JSONArray jsonArray) {
+    public JsonViewerAdapter(JSONArray jsonArray, Boolean isFocusableTv) {
         this.mJSONArray = jsonArray;
+        this.isFocusableTv = isFocusableTv;
         if (mJSONArray == null) {
             throw new IllegalArgumentException("jsonArray can not be null.");
         }
@@ -59,7 +63,9 @@ public class JsonViewerAdapter extends BaseJsonViewerAdapter<JsonViewerAdapter.J
 
     @Override
     public JsonItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new JsonItemViewHolder(new JsonItemView(parent.getContext()));
+        JsonItemView jiv = new JsonItemView(parent.getContext());
+        jiv.setFocusableTv(isFocusableTv);
+        return new JsonItemViewHolder(jiv);
     }
 
     @Override
@@ -239,6 +245,7 @@ public class JsonViewerAdapter extends BaseJsonViewerAdapter<JsonViewerAdapter.J
                 JSONArray array = isJsonArray ? (JSONArray) value : ((JSONObject) value).names();
                 for (int i = 0; array != null && i < array.length(); i++) {
                     JsonItemView childItemView = new JsonItemView(itemView.getContext());
+                    childItemView.setFocusableTv(isFocusableTv);
                     childItemView.setTextSize(TEXT_SIZE_DP);
                     childItemView.setRightColor(BRACES_COLOR);
                     Object childValue = array.opt(i);
@@ -251,6 +258,7 @@ public class JsonViewerAdapter extends BaseJsonViewerAdapter<JsonViewerAdapter.J
                 }
 
                 JsonItemView childItemView = new JsonItemView(itemView.getContext());
+                childItemView.setFocusableTv(isFocusableTv);
                 childItemView.setTextSize(TEXT_SIZE_DP);
                 childItemView.setRightColor(BRACES_COLOR);
                 StringBuilder builder = new StringBuilder(Utils.getHierarchyStr(hierarchy - 1));
